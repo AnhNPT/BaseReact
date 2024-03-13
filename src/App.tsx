@@ -1,4 +1,3 @@
-import { Provider } from "react-redux";
 import { PublicRoutes } from "./routes";
 import { Route, Routes } from "react-router-dom";
 

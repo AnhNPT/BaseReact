@@ -1,16 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from "react";
-
-export default function Home() {
-    const [userName, setUserName] = useState<string>("");
-
+const Home = () => {
+    const dummyApi = () => {
+        fetch("https://dummyjson.com/products/1")
+            .then((res) => res.json())
+            .then((json) => console.log(json));
+    };
     return (
         <div>
-            <h1>Username: </h1>
-            <input type="text" onChange={(e) => setUserName(e.target.value)} name="" id="" />
-            <br />
-            <button>Login</button>
-            <br />
+            <h1>Home Page</h1>
+            <button onClick={() => dummyApi()}>Get</button>
         </div>
     );
-}
+};
+
+export default Home;
