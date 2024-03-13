@@ -1,13 +1,14 @@
-import React, { lazy } from "react";
-import { Route, Routes, Link } from "react-router-dom";
-const Home = lazy(() => import("./pages/Home"));
-const About = lazy(() => import("./pages/About"));
+import { Provider } from "react-redux";
+import { PublicRoutes } from "./routes";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
     return (
         <Routes>
-            <Route path="/" element={<Home></Home>}></Route>
-            <Route path="/about" element={<About></About>}></Route>
+            {PublicRoutes.map((item, index) => {
+                const Page = item.component;
+                return <Route key={index} path={item.path} element={<Page></Page>} />;
+            })}
         </Routes>
     );
 }
