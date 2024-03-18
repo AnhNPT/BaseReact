@@ -14,44 +14,36 @@ interface IProduct {
     thumbnail: string;
     images: string[];
 }
-// interface IApiResponse {
-//     products: IProduct[];
-//     total: number;
-//     skip: number;
-//     limit: number;
-// }
-interface IProductsState {
+interface IProductsResponse {
     products: IProduct[];
-    status: "idle" | "loading" | "succeeded" | "failed";
-    error: boolean;
+    total: number;
+    skip: number;
+    limit: number;
 }
-const initialStateListProduct: IProductsState = {
+const initialStateListProduct: IProductsResponse = {
     products: [],
-    status: "idle",
-    error: false,
+    total: 0,
+    skip: 0,
+    limit: 0,
 };
 
 export const fetchProducts = createAsyncThunk("listProduct", async () => {
-    const response = await axios.get("https://dummyjson.com/products");
-    return response.data;
+    try {
+        const response = await axios.get("https://dummyjson.com/products");
+        return response.data;
+    } catch (error) {
+        throw new Error("Error!!!");
+    }
 });
 
 const productsSlice = createSlice({
-    name: "listSlide",
+    name: "listItemSlide",
     initialState: initialStateListProduct,
     reducers: {},
     extraReducers(builder) {
-        builder.addCase(fetchProducts.pending, (state) => {
-            state.status = "loading";
-        });
         builder.addCase(fetchProducts.fulfilled, (state, action) => {
-            state.status = "succeeded";
             state.products = action.payload;
         });
-        // builder.addCase(fetchProducts.rejected, (state, action) => {
-        //     state.status = "failed";
-        //     state.error = action.payload;
-        // });
     },
 });
 
