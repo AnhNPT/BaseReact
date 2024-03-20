@@ -23,6 +23,7 @@ interface IProductsResponse {
 interface IInitialState {
     productResponse: IProductsResponse;
     isLoading: boolean;
+    totalResultCount: number;
 }
 
 const initialStateListProduct: IProductsResponse = {
@@ -35,12 +36,14 @@ const initialStateListProduct: IProductsResponse = {
 const initalState: IInitialState = {
     productResponse: initialStateListProduct,
     isLoading: true,
+    totalResultCount: 0,
 };
 
 export const fetchProducts = createAsyncThunk("listProduct", async ({ limit, page }: { limit: number; page: number }) => {
     try {
         const response = await axios.get(`https://dummyjson.com/products?skip=${(page - 1) * limit}&limit=${limit}`);
-        return response.data;
+        const totalResultCount = response.data.total;
+        return [response.data, totalResultCount];
     } catch (error) {
         throw new Error("Error!!!");
     }
@@ -55,7 +58,8 @@ const productsSlice = createSlice({
             state.isLoading = false;
         });
         builder.addCase(fetchProducts.fulfilled, (state, action) => {
-            state.productResponse = action.payload;
+            state.productResponse = action.payload[0];
+            state.totalResultCount = action.payload[1];
         });
     },
 });
