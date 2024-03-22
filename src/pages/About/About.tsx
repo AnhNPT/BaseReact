@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts } from "@/redux/features/listProduct";
 import { AppDispatch, RootState } from "@/redux/store";
@@ -21,17 +23,18 @@ const About = () => {
             setPage(page - 1);
         }
     };
+    const handleCurrentPage = (page: number) => {
+        setPage(page);
+        return page;
+    };
 
     const totalPageCount = useMemo(() => {
         return Math.ceil(totalResultCount / limit);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [productResponse?.products]);
 
     useEffect(() => {
         dispatch(fetchProducts({ limit, page }));
     }, [limit, page, dispatch]);
-
-    console.log(totalPageCount);
 
     return (
         <>
@@ -50,6 +53,45 @@ const About = () => {
                 <button style={{ cursor: "pointer" }} disabled={page === 1} onClick={() => handlePrevPage()}>
                     Previous Page
                 </button>
+                <div style={{ display: "flex", gap: "16px", minWidth: "210px", justifyContent: "center" }}>
+                    {page >= 3 ? (
+                        <span className="abc" onClick={() => handleCurrentPage(1)}>
+                            {1}
+                        </span>
+                    ) : (
+                        ""
+                    )}
+                    {page < 4 ? "" : <span>...</span>}
+                    {page < 2 ? (
+                        ""
+                    ) : (
+                        <>
+                            <span className="sadasd" onClick={() => handleCurrentPage(page - 1)}>
+                                {page - 1}
+                            </span>
+                        </>
+                    )}
+
+                    <span style={{ fontWeight: 700 }} onClick={() => handleCurrentPage(page)}>
+                        {page}
+                    </span>
+                    {page === totalPageCount ? (
+                        ""
+                    ) : (
+                        <>
+                            <span onClick={() => handleCurrentPage(page + 1)}>{page + 1}</span>
+                        </>
+                    )}
+
+                    {page > totalPageCount - 3 ? "" : <span>...</span>}
+                    {page < totalPageCount - 1 ? (
+                        <span className="kllk" onClick={() => handleCurrentPage(totalPageCount)}>
+                            {totalPageCount}
+                        </span>
+                    ) : (
+                        ""
+                    )}
+                </div>
                 <button style={{ cursor: "pointer" }} disabled={page > totalPageCount - 1} onClick={() => handleNextPage()}>
                     Next Page
                 </button>
