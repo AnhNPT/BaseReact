@@ -2,18 +2,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProducts } from "@/redux/features/listProduct";
+import { UserLogin, logout } from "@/redux/features/user";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useEffect, useMemo, useState } from "react";
+import SButton from "@/components/ReactComponents/Button/SButton";
 
 const About = () => {
     const [page, setPage] = useState<number>(1);
     const [limit, setLimit] = useState<number>(10);
     const dispatch = useDispatch<AppDispatch>();
     const { productResponse, isLoading, totalResultCount } = useSelector((state: RootState) => state.listProducts);
-
-    // page 1 = limit =10 skip 0
-    // page 2 = skip 10 limit = 10
-    // page x = skip = (X - 1 ) * limit
+    const { value } = useSelector((state: RootState) => state.user);
 
     const handleNextPage = () => {
         setPage(page + 1);
@@ -96,6 +95,18 @@ const About = () => {
                     Next Page
                 </button>
             </div>
+
+            <SButton
+                onClick={() =>
+                    dispatch(
+                        UserLogin({
+                            username: "kminchelle",
+                            password: "0lelplR",
+                        })
+                    )
+                }>
+                <span>Login</span>
+            </SButton>
         </>
     );
 };

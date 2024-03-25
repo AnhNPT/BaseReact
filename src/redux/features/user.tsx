@@ -1,25 +1,56 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const initStateUserValue = {
-    name: "",
-    age: 0,
+interface IUserData {
+    id: number;
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    gender: string;
+    image: string;
+    token: string;
+}
+
+const initStateUserValue: IUserData = {
+    id: NaN,
+    username: "",
     email: "",
+    firstName: "",
+    lastName: "",
+    gender: "",
+    image: "",
+    token: "",
 };
 
-export const userSlice = createSlice({
-    name: "user",
+export const UserLogin = createAsyncThunk("login", async ({ username, password }: { username: string; password: string }) => {
+    try {
+        const response = await axios.post(`https://dummyjson.com/auth/login`, {
+            username: username,
+            password: password,
+        });
+        return response?.data;
+    } catch (error) {
+        throw new Error("Error!!!");
+    }
+});
+
+const userSlice = createSlice({
+    name: "userLogin",
     initialState: {
         value: initStateUserValue,
     },
     reducers: {
-        login: (state, action) => {
-            state.value = action.payload;
-        },
         logout: (state) => {
             state.value = initStateUserValue;
         },
     },
+    extraReducers(builder) {
+        builder.addCase(UserLogin.fulfilled, (state, action) => {
+            state.value = action.payload;
+        });
+    },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { logout } = userSlice.actions;
 export default userSlice.reducer;
